@@ -11,7 +11,7 @@
 #define WINDOW_WIDTH  1024
 #define WINDOW_HEIGHT 768
 
-GLuint VBO;
+GLuint VBO;// нужен для хранения указателя на буфер вершин
 GLuint IBO;
 GLuint gWVPLocation;
 
@@ -46,7 +46,7 @@ void main()                                                                     
 
 static void RenderSceneCB()
 {
-    pGameCamera->OnRender();
+    pGameCamera->OnRender(); //вызов камеры
 
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -81,17 +81,17 @@ static void SpecialKeyboardCB(int Key, int x, int y)
 }
 
 
-static void KeyboardCB(unsigned char Key, int x, int y)
+static void KeyboardCB(unsigned char Key, int x, int y)//для нажатия специальных клавиш 
 {
     switch (Key) {
-    case 'q':
+    case 'q':           //выход из приложения
         exit(0);
     }
 }
 
-static void PassiveMouseCB(int x, int y)
+static void PassiveMouseCB(int x, int y)//Пассивное движение означает, что мышь движется без нажатия каких-либо кнопок.
 {
-    pGameCamera->OnMouse(x, y);
+    pGameCamera->OnMouse(x, y); //Обратный вызов для мыши просто передает ее координаты в камеру.
 }
 
 static void InitializeGlutCallbacks()
@@ -99,6 +99,7 @@ static void InitializeGlutCallbacks()
     glutDisplayFunc(RenderSceneCB);
     glutIdleFunc(RenderSceneCB);
     glutSpecialFunc(SpecialKeyboardCB);
+    //2 новых функции обратного вызова
     glutPassiveMotionFunc(PassiveMouseCB);
     glutKeyboardFunc(KeyboardCB);
 }
@@ -199,12 +200,12 @@ int main(int argc, char** argv)
     glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     glutInitWindowPosition(100, 100);
     glutCreateWindow("Tutorial 15");
-    glutGameModeString("1280x1024@32");
+    glutGameModeString("1280x1024@32");//функция glut'а разрешает вашему приложению запускаться в полноэкранном режиме
     glutEnterGameMode();
 
     InitializeGlutCallbacks();
 
-    pGameCamera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);
+    pGameCamera = new Camera(WINDOW_WIDTH, WINDOW_HEIGHT);//Камера теперь автоматически установится в нужное положение
 
     // Must be done after glut is initialized!
     GLenum res = glewInit();
